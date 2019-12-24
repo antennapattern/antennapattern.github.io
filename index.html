@@ -47,6 +47,9 @@
   <link rel="stylesheet" href="css/fontawesome-free-5.11.2-web/css/all.min.css">
   <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
 
+  <!-- Math.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.2/math.min.js"
+    integrity="sha256-D/MkugLuxx4Xx0Kb92cUhpxlCMhUvQ0eOtEL8Ol23jM=" crossorigin="anonymous"></script>
   <!-- Custom -->
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/hline.css">
@@ -89,6 +92,10 @@
     .content.content--show {
       height: 90vh;
     }
+
+    .ui.grid {
+      margin-top: 4rem !important;
+    }
   </style>
 </head>
 
@@ -98,20 +105,75 @@
     <div class="navbar-brand">Antenna Pattern</div>
   </nav>
 
+  <h1 style="display: none;">Antenna Pattern</h1>
+
+
   <!-- Container -->
-  <div class="container-fluid">
-    <h1 style="display: none;">Antenna Pattern</h1>
-    <div id="tester" style="width:600px;height:250px;"></div>
+  <div class="ui stackable grid">
+    <div class="four wide column">
+      <div class="ui left right labeled input">
+        <div class="ui label" style="width:100px;">
+          Frequency
+        </div>
+        <input id="frequency" type="number" value=11.5 min=2.0 max=30.0 step=0.1>
+        <div class="ui label" style="width:50px;">GHz</div>
+      </div>
+      <div class="ui left right labeled input mt-2">
+        <div class="ui label" style="width:100px;">
+          Diameter
+        </div>
+        <input id="diameter" type="number" value=300 min=100 max=5000 step=10>
+        <div class="ui label" style="width:50px;">mm</div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div id="plot" style="height:450px;"></div>
+    </div>
+  </div>
   </div>
 
   <script>
-    TESTER = document.getElementById('tester');
-    Plotly.plot(TESTER, [{
+    Plotly.plot($("#plot")[0], [{
       x: [1, 2, 3, 4, 5],
       y: [1, 2, 4, 8, 16]
     }], {
       margin: { t: 0 }
     });
+
+    $(document).ready(function () {
+      $("#frequency").change(function () {
+        updatePlot()
+      })
+      $("#diameter").change(function () {
+        updatePlot()
+      })
+
+      updatePlot()
+
+    });
+
+    function updatePlot() {
+      var diameter = $("#diameter").val()
+      var frequency = $("#frequency").val()
+      var wavelength = 3E8 / (frequency * 1E9) * 1000
+      var phi_min = Math.min(2, Math.max(1, 100 * (wavelength / diameter)))
+      var phi_max = 20
+      var Nphi = 11
+      var phis = math.range(phi_min, phi_max, (phi_max - phi_min) / Nphi, true)._data
+      var SLLs = phis.map(function (phi) {
+        return 29.0 - 25 * Math.log10(phi)
+      })
+      phis.push(26.5)
+      SLLs.push(-3.5)
+      // console.log(phis)
+      // console.log(SLLs)
+      // Plotly.deleteTraces($("#plot")[0], 0);
+      while ($("#plot")[0].data.length > 0) {
+        Plotly.deleteTraces($("#plot")[0], [0]);
+      }
+      Plotly.addTraces($("#plot")[0], { x: phis, y: SLLs })
+      Plotly.addTraces($("#plot")[0], { x: phis.map(function (phi) { return -phi }), y: SLLs })
+    }
 
   </script>
 
