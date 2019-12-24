@@ -52,6 +52,9 @@
   <link rel="stylesheet" href="css/hline.css">
   <link rel="stylesheet" href="css/footer.css">
 
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   <style>
     .meta__avatar {
       display: block;
@@ -92,104 +95,24 @@
 <body class="bg-white">
   <!-- Navbar -->
   <nav class="navbar navbar-inverse navbar-expand-sm fixed-top" style="background-color: #212529;">
-    <div class="navbar-brand">Antenna Books</div>
-    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
-      data-target="#navbarSupportedContent" aria-controls="navbarSupportedConten" aria-expanded="false"
-      aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto mr-0">
-        <li id="add" class="active" style="display: none;">
-          <a class="nav-link" onclick="openAddItemWin()"
-            style="background: #212529; color: rgba(255, 255, 255, 1.0)">Add</a>
-        </li>
-      </ul>
-    </div>
+    <div class="navbar-brand">Antenna Pattern</div>
   </nav>
 
   <!-- Container -->
   <div class="container-fluid">
-    <h1 style="display: none;">Antenna Books</h1>
-    <button id="menu-toggle" class="menu-toggle"><span>Menu</span></button>
-    <div id="theSidebar" class="sidebar bg-white border border-light rounded">
-      <button class="close-button fa fa-fw fa-close"></button>
-      <div class="ui fluid icon input">
-        <input type="text" placeholder="Search...">
-        <i class="inverted circular search link icon"></i>
-      </div>
-    </div>
-    <div id="theGrid" class="main">
-      <section class="grid mb-5">
-        <header class="top-bar d-block d-sm-none" style="display:none;">
-          <div class="ui fluid icon input">
-            <input type="text" placeholder="Search...">
-            <i class="inverted circular search link icon"></i>
-          </div>
-        </header>
-      </section>
-      <section class="content">
-        <div class="scroll-wrap">
-        </div>
-        <button class="close-button"><i class="fas fa-times fa-2x"></i><span>Close</span></button>
-      </section>
-    </div>
+    <h1 style="display: none;">Antenna Pattern</h1>
+    <div id="tester" style="width:600px;height:250px;"></div>
   </div>
-
-  <!-- Loader -->
-  <div class="ui active dimmer">
-    <div class="ui massive text loader">Loading...</div>
-  </div>
-
-  <!-- Footer -->
-  <!-- <footer class="footer fixed-bottom w-100">
-    <div class="container d-flex justify-content-center">
-      <span class="text-muted">Beta Testing!</span> -->
-  <!-- <a id="feedback" data-toggle="modal" data-target=".modal">Feedback</a> -->
-  <!-- </div>
-  </footer> -->
-
-  <!-- Modal -->
-  <div class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-center">
-      <div class="modal-content">
-        <div class="modal-header">
-          <!-- <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5> -->
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="row modal-body">
-          <div class="col-4 bookmarks">
-            Bookmarks
-          </div>
-          <div class="col-8 reader">
-            Reader
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/template0_classie.js"></script>
-  <script src="js/template0_main.js"></script>
-
-  <!-- <script src="js/add.js"></script> -->
-  <!-- <script src="js/event.js"></script> -->
-  <script src="js/books.js"></script>
 
   <script>
-    setTimeout(function () {
+    TESTER = document.getElementById('tester');
+    Plotly.plot(TESTER, [{
+      x: [1, 2, 3, 4, 5],
+      y: [1, 2, 4, 8, 16]
+    }], {
+      margin: { t: 0 }
+    });
 
-      initGrid()
-
-
-    }, 2000)
-
-    $(document).waitForImages(function () {
-      $(".ui.active.dimmer").removeClass("active")
-      console.log("Images loaded.")
-    })
   </script>
 
 </body>
