@@ -22,34 +22,22 @@
 
 
   <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
-
-  <!-- Semantic UI -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
   <!-- Popper.js -->
   <script src="https://unpkg.com/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 
-  <!-- Webix -->
-  <!--<link rel="stylesheet" href="http://cdn.webix.com/edge/skins/compact.css" type="text/css">-->
-  <!--<script src="http://cdn.webix.com/edge/webix.js" type="text/javascript"></script>-->
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="css/fontawesome-free-5.11.2-web/css/all.min.css">
   <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
 
   <!-- Math.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.2/math.min.js"
-    integrity="sha256-D/MkugLuxx4Xx0Kb92cUhpxlCMhUvQ0eOtEL8Ol23jM=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.2/math.min.js" integrity="sha256-D/MkugLuxx4Xx0Kb92cUhpxlCMhUvQ0eOtEL8Ol23jM=" crossorigin="anonymous"></script>
   <!-- Custom -->
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/hline.css">
@@ -96,12 +84,20 @@
     .ui.grid {
       margin-top: 4rem !important;
     }
+
+    .input-group-prepend > .input-group-text{
+      width: 110px;
+    }
+
+    .input-group-append > .input-group-text{
+      width: 50px;
+    }
   </style>
 </head>
 
 <body class="bg-white">
   <!-- Navbar -->
-  <nav class="navbar navbar-inverse navbar-expand-sm fixed-top" style="background-color: #212529;">
+  <nav class="navbar navbar-inverse navbar-expand-sm" style="background-color: #212529;">
     <div class="navbar-brand">Antenna Pattern</div>
   </nav>
 
@@ -109,28 +105,51 @@
 
 
   <!-- Container -->
-  <div class="ui stackable grid">
-    <div class="four wide column">
-      <div class="ui left right labeled input">
-        <div class="ui label" style="width:100px;">
-          Frequency
+  <div class="container-sm mt-3">
+    <div class="row mb-3">
+      <div class="col-lg-4 mb-3">
+        <div class="input-group mb-3 justify-content-center">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Frequency</span>
+          </div>
+          <input id="frequency" class="px-1" style="width:80px;" type="number" value=11.5 min=2.0 max=30.0 step=0.1>
+          <div class="input-group-append">
+            <span class="input-group-text">GHz</span>
+          </div>
         </div>
-        <input id="frequency" type="number" value=11.5 min=2.0 max=30.0 step=0.1>
-        <div class="ui label" style="width:50px;">GHz</div>
-      </div>
-      <div class="ui left right labeled input mt-2">
-        <div class="ui label" style="width:100px;">
-          Diameter
+        <div class="input-group mb-3 justify-content-center">
+          <label>Wavelength :</label>
+          <label id="wavelength" class="mx-2"></label>
+          <label>mm</label>
         </div>
-        <input id="diameter" type="number" value=300 min=100 max=5000 step=10>
-        <div class="ui label" style="width:50px;">mm</div>
+        <div class="input-group mb-3 justify-content-center">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Diameter</span>
+          </div>
+          <input id="diameter" class="px-1" style="width:80px;" type="number" value=300 min=100 max=5000 step=10>
+          <div class="input-group-append">
+            <span class="input-group-text">mm</span>
+          </div>
+        </div>
+        <div class="input-group mb-3 justify-content-center">
+          <label>&lambda;/D :</label>
+          <label id="ddl" class="mx-2"></label>
+        </div>
+        <div class="input-group mb-3 justify-content-center">
+          <label>D/&lambda; :</label>
+          <label id="ldd" class="mx-2"></label>
+        </div>
+
+
       </div>
-    </div>
-    <div class="twelve wide column">
-      <div id="plot" style="height:450px;"></div>
+      <div id="plot" class="col-lg-8 justify-content-center" style="height: 350px;"></div>
     </div>
   </div>
-  </div>
+
+
+
+
+ 
 
   <script>
     Plotly.plot($("#plot")[0], [{
@@ -143,12 +162,14 @@
     $(document).ready(function () {
       $("#frequency").change(function () {
         updatePlot()
+        updateWavelength()
       })
       $("#diameter").change(function () {
         updatePlot()
       })
 
       updatePlot()
+      updateWavelength()
 
     });
 
@@ -173,6 +194,11 @@
       }
       Plotly.addTraces($("#plot")[0], { x: phis, y: SLLs })
       Plotly.addTraces($("#plot")[0], { x: phis.map(function (phi) { return -phi }), y: SLLs })
+    }
+
+    function updateWavelength() {
+      var frequency = $("#frequency").val()
+      $("#wavelength").text((3E8 / (frequency * 1E9) * 1000).toFixed(1))
     }
 
   </script>
