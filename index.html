@@ -85,11 +85,11 @@
       margin-top: 4rem !important;
     }
 
-    .input-group-prepend > .input-group-text{
+    .input-group-prepend>.input-group-text {
       width: 110px;
     }
 
-    .input-group-append > .input-group-text{
+    .input-group-append>.input-group-text {
       width: 50px;
     }
   </style>
@@ -107,7 +107,12 @@
   <!-- Container -->
   <div class="container-sm mt-3">
     <div class="row mb-3">
-      <div class="col-lg-4 mb-3">
+      <div class="col-lg-4 mb-3 text-center">
+        <select class="custom-select mb-5" style="width: 240px;">
+          <option value=0 selected>ITU-R S.580-6</option>
+          <option value=1>One</option>
+        </select>
+
         <div class="input-group mb-3 justify-content-center">
           <div class="input-group-prepend">
             <span class="input-group-text">Frequency</span>
@@ -133,13 +138,23 @@
         </div>
         <div class="input-group mb-3 justify-content-center">
           <label>&lambda;/D :</label>
-          <label id="ddl" class="mx-2"></label>
+          <label id="ldd" class="mx-2"></label>
         </div>
         <div class="input-group mb-3 justify-content-center">
           <label>D/&lambda; :</label>
-          <label id="ldd" class="mx-2"></label>
+          <label id="ddl" class="mx-2"></label>
         </div>
 
+        <div class="custom-file" style="width: 240px;">
+          <input type="file" class="custom-file-input" id="fileInput">
+          <label class="custom-file-label text-left" for="customFile">Pattern file...</label>
+        </div>
+        <div class="input-group mb-3 justify-content-center mt-1">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Normalize</span>
+          </div>
+          <input id="normalize" class="px-1" style="width:130px;" type="number">
+        </div>
 
       </div>
       <div id="plot" class="col-lg-8 justify-content-center" style="height: 350px;"></div>
@@ -149,27 +164,36 @@
 
 
 
- 
+
 
   <script>
-    Plotly.plot($("#plot")[0], [{
+    Plotly.newPlot($("#plot")[0], [{
       x: [1, 2, 3, 4, 5],
       y: [1, 2, 4, 8, 16]
     }], {
       margin: { t: 0 }
-    });
+    }, { responsive: true });
 
     $(document).ready(function () {
       $("#frequency").change(function () {
         updatePlot()
         updateWavelength()
+        updateWavelengthDiamterRatio()
       })
       $("#diameter").change(function () {
         updatePlot()
+        updateWavelengthDiamterRatio()
+      })
+      $("#normalize").change(function () {
+        normalizePattern()
       })
 
       updatePlot()
       updateWavelength()
+      updateWavelengthDiamterRatio()
+
+      document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
 
     });
 
@@ -192,8 +216,10 @@
       while ($("#plot")[0].data.length > 0) {
         Plotly.deleteTraces($("#plot")[0], [0]);
       }
+      phis = phis.slice().map(function (phi) { return -phi }).reverse().concat(phis)
+      SLLs = SLLs.slice().reverse().concat(SLLs)
       Plotly.addTraces($("#plot")[0], { x: phis, y: SLLs })
-      Plotly.addTraces($("#plot")[0], { x: phis.map(function (phi) { return -phi }), y: SLLs })
+      // Plotly.addTraces($("#plot")[0], { x: phis.map(function (phi) { return -phi }), y: SLLs })
     }
 
     function updateWavelength() {
@@ -201,6 +227,55 @@
       $("#wavelength").text((3E8 / (frequency * 1E9) * 1000).toFixed(1))
     }
 
+    function updateWavelengthDiamterRatio() {
+      var wavelength = Number($("#wavelength").text())
+      var diameter = $("#diameter").val()
+      $("#ldd").text((wavelength / diameter).toFixed(2))
+      $("#ddl").text((diameter / wavelength).toFixed(2))
+    }
+
+    function handleFileSelect(event) {
+      const reader = new FileReader()
+      reader.onload = handleFileLoad;
+      reader.readAsText(event.target.files[0])
+    }
+
+    var angles = []
+    var values = []
+    function handleFileLoad(event) {
+      console.log(event);
+      var lines = event.target.result.split("\n");
+      angles = []
+      values = []
+      for (var i = 0; i < lines.length; ++i) {
+        angles.push(Number(lines[i].match(/\S+/g)[0]))
+        values.push(Number(lines[i].match(/\S+/g)[1]))
+      }
+      // console.log(angles)
+      // console.log(values)
+      try {
+        Plotly.deleteTraces($("#plot")[0], [1]);
+      } catch (error) {
+
+      }
+      Plotly.addTraces($("#plot")[0], { x: angles, y: values })
+    }
+
+    var normalizedValues = []
+    function normalizePattern(){
+      var normalizeValue = $("#normalize").val()
+      Math.max(values)
+      for (var i = 0; i < values.length; ++i) {
+        normalizedValues[i] = values[i] - (Math.max(...values)-normalizeValue)
+      }
+      console.log(normalizedValues)
+      try {
+        Plotly.deleteTraces($("#plot")[0], [1]);
+      } catch (error) {
+
+      }
+      Plotly.addTraces($("#plot")[0], { x: angles, y: normalizedValues })
+    }
   </script>
 
 </body>
