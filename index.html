@@ -156,6 +156,8 @@
           <input id="normalize" class="px-1" style="width:130px;" type="number">
         </div>
 
+        <a href="patterns/sample_pattern.txt">Sample pattern file</a>
+
       </div>
       <div id="plot" class="col-lg-8 justify-content-center" style="height: 350px;"></div>
     </div>
@@ -167,12 +169,25 @@
 
 
   <script>
-    Plotly.newPlot($("#plot")[0], [{
-      x: [1, 2, 3, 4, 5],
-      y: [1, 2, 4, 8, 16]
-    }], {
-      margin: { t: 0 }
-    }, { responsive: true });
+    Plotly.newPlot($("#plot")[0],
+      [{
+        x: [1, 2, 3, 4, 5],
+        y: [1, 2, 4, 8, 16]
+      }],
+      {
+        margin: { t: 0 },
+        xaxis: {
+          title: {
+            text: "angle"
+          }
+        },
+        yaxis: {
+          title: {
+            text: "dB"
+          }
+        }
+      },
+      { responsive: true });
 
     $(document).ready(function () {
       $("#frequency").change(function () {
@@ -262,11 +277,11 @@
     }
 
     var normalizedValues = []
-    function normalizePattern(){
+    function normalizePattern() {
       var normalizeValue = $("#normalize").val()
       Math.max(values)
       for (var i = 0; i < values.length; ++i) {
-        normalizedValues[i] = values[i] - (Math.max(...values)-normalizeValue)
+        normalizedValues[i] = values[i] - (Math.max(...values) - normalizeValue)
       }
       console.log(normalizedValues)
       try {
